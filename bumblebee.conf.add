@@ -1,0 +1,11 @@
+# merge these settings into your /etc/bumblebee/bumblebee.conf
+
+[bumblebeed]
+KeepUnusedXServer=true
+TurnCardOffAtExit=false
+Driver=fglrx # have had no success with radeon
+
+[driver-fglrx]
+KernelDriver=fglrx
+PMMethod=none
+XorgConfFile=/etc/bumblebee/xorg.conf.fglrx
