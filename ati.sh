@@ -8,7 +8,10 @@ case $1 in
         systemctl start bumblebeed;
     ;;
     stop)
-        killall -9 Xorg; # prevent KMS failures
+        # prevent KMS failures
+        # this takes advantage of the fact that login managers spawn
+        # X, not Xorg
+        killall -9 Xorg;
         systemctl stop bumblebeed;
         pxp_switch_catalyst intel;
     ;;
@@ -33,9 +36,11 @@ case $1 in
         exit $?;
     ;;
     on)
+        # this is different for every system!
         echo '\_SB.PCI0.PEG0.PEGP._ON' > /proc/acpi/call;
     ;;
     off)
+        # this is different for every system!
         echo '\_SB.PCI0.PEG0.PEGP._OFF' > /proc/acpi/call;
     ;;
     *)
