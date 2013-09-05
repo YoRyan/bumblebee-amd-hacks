@@ -77,7 +77,7 @@ Essentially, you need to do the following:
 
 1. `ati stop` if Bumblebee is currently running.
 2. "Switch back" to the Intel card with `pxp_switch_catalyst intel`.
-3. Delete the obsolete **zzz-undo_catalyst.sh** file.
+3. Delete the obsolete **/etc/profile.d/zzz-undo_catalyst.sh** file.
 4. Delete the files listed in the **catalyst-utils-pxp** section.
 5. Update your Bumblebee configuration as described in **Bumblebee configuration**.
 6. Replace your existing `ati.sh`.

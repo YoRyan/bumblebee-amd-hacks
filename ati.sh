@@ -1,5 +1,6 @@
 #!/bin/bash
-# a shell script for controlling the discrete GPU
+# A shell script for controlling the discrete GPU.
+# Copyright (C) 2013 Ryan Young, public domain (CC0)
 
 TMP_LIB_DIR='/var/tmp/fglrx-bumblebee';
 
