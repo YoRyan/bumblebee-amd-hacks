@@ -21,24 +21,35 @@ Next, you need to install Bumblebee's `common-amd` branch. I wrote an
 [AUR package](https://aur.archlinux.org/packages/bumblebee-amd-git/) to do the
 job.
 
-### /etc/profile.d
+### catalyst-utils-pxp
 
-The PowerXpress switching scripts work by creating a custom library path for
-OpenGL libraries, which are then swapped out when switching between GPU's.
-For our purposes, we want to use the Intel/Mesa libraries unless specifically
-running a program on the AMD card. Therefore, we need to undo the
-`LD_LIBRARY_PATH` changes that the scripts make.
+Vi0l0's GPU switching scripts that come with the `catalyst-utils-pxp` package
+are clever solutions for switching GPUs between X sessions, but they are
+unsuitable for use with Bumblebee.
 
-Drop `zzz_undo-catalyst.sh` into `/etc/profile.d/`. This one-line file will
-clear `LD_LIBRARY_PATH`, bypassing the catalyst switching system. Note that
-this might cause problems if you actually want something in your
-`LD_LIBRARY_PATH`; you should adjust the file accordingly.
+Keep `catalyst-utils-pxp` installed, but do the following:
 
-### bumblebee.conf
+1. Use Vi0l0's scripts to "switch" to the Intel card.
+   `pxp_switch_catalyst intel`
+2. Remove the following files:
+   - /etc/profile.d/catalyst.sh
+   - /etc/profile.d/catalystpxp.sh
+   - /etc/profile.d/lib32-catalyst.sh _(if lib32- package installed)_
+   - /etc/profile.d/lib32-catalystpxp.sh _(if lib32- package installed)_
+   - /etc/X11/xorg.conf.d/20-catalystpxp.conf
 
-Next we need to edit the Bumblebee configuration file. Merge the settings
-listed in `bumblebee.conf.add` into your existing
-`/etc/bumblebee/bumblebee.conf`.
+(Don't worry - if things don't work out, they can always be reinstalled!)
+
+### Bumblebee configuration
+
+Next we need to edit the Bumblebee configuration files.
+
+1. Merge the settings listed in `bumblebee.conf.add` into your existing
+   `/etc/bumblebee/bumblebee.conf`.
+2. Replace your existing `/etc/bumblebee/xorg.conf.fglrx` with the version
+   contained in this package.
+3. Drop `bumblebeed.service` into `/etc/systemd/system`. Run
+   `systemctl --system daemon-reload` so the new unit takes effect.
 
 ### ati.sh
 
@@ -54,14 +65,23 @@ turns off your GPU, and then **put the call into your control script!**
 
 ## Warnings
 
-* Sometimes OpenGL will break horribly on both cards - segmentation faults
-  on the Intel GPU and X render errors with `optirun`. If this happens, just
-  restart the X server. This problem seems to occur on first login.
 * The power management feature of the control script uses ACPI calls to turn
   your GPU on and off. Usually turning it off works fine, but on my system
   my GPU can't be turned back on, even though the ACPI call is accepted.
 * Rebooting the computer will always turn the dedicated GPU back on.
 * Be sure to put your own ACPI calls into the control script, of course!
+
+## Notes for users upgrading from the initial version
+
+Essentially, you need to do the following:
+
+1. `ati stop` if Bumblebee is currently running.
+2. "Switch back" to the Intel card with `pxp_switch_catalyst intel`.
+3. Delete the obsolete **zzz-undo_catalyst.sh** file.
+4. Delete the files listed in the **catalyst-utils-pxp** section.
+5. Update your Bumblebee configuration as described in **Bumblebee configuration**.
+6. Replace your existing `ati.sh`.
+7. Restart X and hope nothing blows up!
 
 ## License
 
