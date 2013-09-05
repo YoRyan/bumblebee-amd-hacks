@@ -1,0 +1,15 @@
+[Unit]
+Description=Bumblebee C Daemon
+
+[Service]
+Type=simple
+CPUSchedulingPolicy=idle
+ExecStart=/usr/sbin/bumblebeed
+Restart=always
+RestartSec=60
+StandardOutput=kmsg
+Environment=LD_LIBRARY_PATH=/var/tmp/fglrx-bumblebee/
+
+[Install]
+WantedBy=graphical.target
+

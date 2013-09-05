@@ -1,10 +1,29 @@
 #!/bin/bash
 # a shell script for controlling the discrete GPU
 
+TMP_LIB_DIR='/var/tmp/fglrx-bumblebee';
+
 case $1 in
     start)
-        glxinfo > /dev/null; # improves reliability?
-        pxp_switch_catalyst amd;
+        if [[ ! -d $TMP_LIB_DIR ]]
+        then
+            # create a working dir for replacement libs and xorg modules
+            mkdir -p $TMP_LIB_DIR;
+
+            # symlink libGL
+            ln -sf /usr/lib/catalystpxp/fglrx/fglrx-libGL.so.1.2 \
+                $TMP_LIB_DIR/libGL.so;
+            ln -sf $TMP_LIB_DIR/libGL.so $TMP_LIB_DIR/libGL.so.1;
+            ln -sf $TMP_LIB_DIR/libGL.so $TMP_LIB_DIR/libGL.so.1.2;
+
+            # symlink libglx xorg module
+            mkdir -p $TMP_LIB_DIR/xorg-modules/extensions;
+            ln -sf /usr/lib/xorg/modules/updates/extensions/fglrx/fglrx-libglx.so \
+                $TMP_LIB_DIR/xorg-modules/extensions/libglx.so;
+            
+            chmod -R 777 $TMP_LIB_DIR;
+        fi
+        
         systemctl start bumblebeed;
     ;;
     stop)
@@ -13,7 +32,6 @@ case $1 in
         # X, not Xorg
         killall -9 Xorg;
         systemctl stop bumblebeed;
-        pxp_switch_catalyst intel;
     ;;
     query)
         systemctl status bumblebeed > /dev/null;
@@ -27,13 +45,9 @@ case $1 in
         fi
     ;;
     run)
-        source /etc/profile.d/catalyst.sh;
-        source /etc/profile.d/catalystpxp.sh;
-        source /etc/profile.d/lib32-catalyst.sh;
-        source /etc/profile.d/lib32-catalystpxp.sh;
+        export LD_LIBRARY_PATH=$TMP_LIB_DIR:$LD_LIBRARY_PATH;
         shift;
         exec optirun $@;
-        exit $?;
     ;;
     on)
         # this is different for every system!

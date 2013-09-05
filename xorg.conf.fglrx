@@ -1,0 +1,14 @@
+Section "ServerLayout"
+    Identifier "Layout0"
+    Option "AutoAddDevices" "false"
+EndSection
+
+Section "Device"
+    Identifier "Device1"
+    Driver "fglrx"
+EndSection
+
+Section "Files"
+     ModulePath   "/var/tmp/fglrx-bumblebee/xorg-modules"
+     ModulePath   "/usr/lib/xorg/modules"
+EndSection
