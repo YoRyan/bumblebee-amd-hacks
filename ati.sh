@@ -6,24 +6,39 @@ TMP_LIB_DIR='/var/tmp/fglrx-bumblebee';
 
 case $1 in
     start)
-        if [[ ! -d $TMP_LIB_DIR ]]
+        # recreate the directory every time we start Bumblebee, just to be safe
+        if [[ -d $TMP_LIB_DIR ]]
         then
-            # create a working dir for replacement libs and xorg modules
-            mkdir -p $TMP_LIB_DIR;
-
-            # symlink libGL
-            ln -sf /usr/lib/catalystpxp/fglrx/fglrx-libGL.so.1.2 \
-                $TMP_LIB_DIR/libGL.so;
-            ln -sf $TMP_LIB_DIR/libGL.so $TMP_LIB_DIR/libGL.so.1;
-            ln -sf $TMP_LIB_DIR/libGL.so $TMP_LIB_DIR/libGL.so.1.2;
-
-            # symlink libglx xorg module
-            mkdir -p $TMP_LIB_DIR/xorg-modules/extensions;
-            ln -sf /usr/lib/xorg/modules/updates/extensions/fglrx/fglrx-libglx.so \
-                $TMP_LIB_DIR/xorg-modules/extensions/libglx.so;
-            
-            chmod -R 777 $TMP_LIB_DIR;
+            rm -rf $TMP_LIB_DIR;
         fi
+        
+        # create a working dir for replacement libs and xorg modules
+        mkdir -p $TMP_LIB_DIR;
+        
+        # symlink libGL
+        mkdir -p $TMP_LIB_DIR/lib;
+        ln -sf /usr/lib/catalystpxp/fglrx/fglrx-libGL.so.1.2 \
+            $TMP_LIB_DIR/lib/libGL.so;
+        ln -sf $TMP_LIB_DIR/lib/libGL.so $TMP_LIB_DIR/lib/libGL.so.1;
+        ln -sf $TMP_LIB_DIR/lib/libGL.so $TMP_LIB_DIR/lib/libGL.so.1.2;
+
+        # test for lib32 libraries
+        if [[ -e /usr/lib32/catalystpxp ]]
+        then
+            # symlink lib32 libGL
+            mkdir -p $TMP_LIB_DIR/lib32;
+            ln -sf /usr/lib32/catalystpxp/fglrx/fglrx-libGL.so.1.2 \
+                $TMP_LIB_DIR/lib32/libGL.so;
+            ln -sf $TMP_LIB_DIR/lib32/libGL.so $TMP_LIB_DIR/lib32/libGL.so.1;
+            ln -sf $TMP_LIB_DIR/lib32/libGL.so $TMP_LIB_DIR/lib32/libGL.so.1.2;
+        fi
+        
+        # symlink libglx xorg module
+        mkdir -p $TMP_LIB_DIR/xorg-modules/extensions;
+        ln -sf /usr/lib/xorg/modules/updates/extensions/fglrx/fglrx-libglx.so \
+            $TMP_LIB_DIR/xorg-modules/extensions/libglx.so;
+        
+        chmod -R 777 $TMP_LIB_DIR;
         
         systemctl start bumblebeed;
     ;;
@@ -46,7 +61,12 @@ case $1 in
         fi
     ;;
     run)
-        export LD_LIBRARY_PATH=$TMP_LIB_DIR:$LD_LIBRARY_PATH;
+        if [[ -e $TMP_LIB_DIR/lib32 ]]
+        then
+            export LD_LIBRARY_PATH=$TMP_LIB_DIR/lib:$TMP_LIB_DIR/lib32:$LD_LIBRARY_PATH;
+        else
+            export LD_LIBRARY_PATH=$TMP_LIB_DIR/lib:$LD_LIBRARY_PATH;
+        fi
         shift;
         exec optirun $@;
     ;;
