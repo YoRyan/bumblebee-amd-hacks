@@ -48,8 +48,6 @@ Next we need to edit the Bumblebee configuration files.
    `/etc/bumblebee/bumblebee.conf`.
 2. Replace your existing `/etc/bumblebee/xorg.conf.fglrx` with the version
    contained in this package.
-3. Drop `bumblebeed.service` into `/etc/systemd/system`. Run
-   `systemctl --system daemon-reload` so the new unit takes effect.
 
 ### ati.sh
 
