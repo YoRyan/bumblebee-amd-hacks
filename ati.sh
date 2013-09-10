@@ -23,7 +23,7 @@ case $1 in
         ln -sf $TMP_LIB_DIR/lib/libGL.so $TMP_LIB_DIR/lib/libGL.so.1.2;
 
         # test for lib32 libraries
-        if [[ -e /usr/lib32/catalystpxp ]]
+        if [[ -d /usr/lib32/catalystpxp ]]
         then
             # symlink lib32 libGL
             mkdir -p $TMP_LIB_DIR/lib32;
