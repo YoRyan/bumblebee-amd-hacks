@@ -27,18 +27,9 @@ Vi0l0's GPU switching scripts that come with the `catalyst-utils-pxp` package
 are clever solutions for switching GPUs between X sessions, but they are
 unsuitable for use with Bumblebee.
 
-Keep `catalyst-utils-pxp` installed, but do the following:
+Keep `catalyst-utils-pxp` installed, but "switch" back to the Intel card.
 
-1. Use Vi0l0's scripts to "switch" to the Intel card.
-   `pxp_switch_catalyst intel`
-2. Remove the following files:
-   - /etc/profile.d/catalyst.sh
-   - /etc/profile.d/catalystpxp.sh
-   - /etc/profile.d/lib32-catalyst.sh _(if lib32- package installed)_
-   - /etc/profile.d/lib32-catalystpxp.sh _(if lib32- package installed)_
-   - /etc/X11/xorg.conf.d/20-catalystpxp.conf
-
-(Don't worry - if things don't work out, they can always be reinstalled!)
+`pxp_switch_catalyst intel`
 
 ### Bumblebee configuration
 
@@ -76,10 +67,9 @@ Essentially, you need to do the following:
 1. `ati stop` if Bumblebee is currently running.
 2. "Switch back" to the Intel card with `pxp_switch_catalyst intel`.
 3. Delete the obsolete **/etc/profile.d/zzz-undo_catalyst.sh** file.
-4. Delete the files listed in the **catalyst-utils-pxp** section.
-5. Update your Bumblebee configuration as described in **Bumblebee configuration**.
-6. Replace your existing `ati.sh`.
-7. Restart X and hope nothing blows up!
+4. Update your Bumblebee configuration as described in **Bumblebee configuration**.
+5. Replace your existing `ati.sh`.
+6. Restart X and hope nothing blows up!
 
 ## License
 
