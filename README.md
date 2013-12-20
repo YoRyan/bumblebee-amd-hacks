@@ -11,7 +11,7 @@ They were also designed for a combination of fglrx (catalyst) and i915. I have
 not had any success with the radeon driver, due to KMS conflicts. Try at your
 own risk.
 
-## Step-by-step usage
+## Step-by-step installation
 
 First, you will need to install the catalyst driver with PowerXpress support.
 You can get it from the AUR:
@@ -47,20 +47,18 @@ Finally, place `ati.sh` somewhere in your `$PATH`, like `/usr/local/bin/ati`.
 This shell script is your one-stop shop for utilizing your dedicated GPU.
 Just run it to list the options.
 
-If you want power management (which is rather buggy, see the warnings section),
-install [acpi_call](https://aur.archlinux.org/packages/dkms-acpi_call-git/)
-from the AUR. Run the `turn_off_gpu.sh` script to determine which ACPI call
-turns off your GPU, and then **put the call into your control script!**
+#### Power management
 
-## Warnings
+Even when you're not using it, the dedicated GPU will consume quite a bit of power
+and waste heat. To power it on and off on demand, you have two options:
 
-* The power management feature of the control script uses ACPI calls to turn
-  your GPU on and off. Usually turning it off works fine, but on my system
-  my GPU can't be turned back on, even though the ACPI call is accepted.
-* Rebooting the computer will always turn the dedicated GPU back on.
-* Be sure to put your own ACPI calls into the control script, of course!
+* Simply load and unload the fglrx module (recommended). Simple and reliable,
+  assuming this trick works on your system. (Verify using powertop.)
+* Install [acpi_call](https://aur.archlinux.org/packages/dkms-acpi_call-git/)
+  from the AUR. Run the `turn_off_gpu.sh` script to determine which ACPI call
+  turns off your GPU, and then put that call into `ati.sh`.
 
-## Notes for users upgrading from the initial version
+## Notes for users upgrading from the initial (summer 2013) version
 
 Essentially, you need to do the following:
 
@@ -69,7 +67,7 @@ Essentially, you need to do the following:
 3. Delete the obsolete **/etc/profile.d/zzz-undo_catalyst.sh** file.
 4. Update your Bumblebee configuration as described in **Bumblebee configuration**.
 5. Replace your existing `ati.sh`.
-6. Restart X and hope nothing blows up!
+6. Restart X.
 
 ## License
 
