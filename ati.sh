@@ -71,12 +71,14 @@ case $1 in
         exec optirun $@
     ;;
     on)
-        # this is different for every system!
-        echo '\_SB.PCI0.PEG0.PEGP._ON' > /proc/acpi/call
+        # Pick one method or the other. Unloading fglrx seems more reliable.
+        #echo '\_SB.PCI0.PEG0.PEGP._ON' > /proc/acpi/call
+        modprobe fglrx
     ;;
     off)
-        # this is different for every system!
-        echo '\_SB.PCI0.PEG0.PEGP._OFF' > /proc/acpi/call
+        # Pick one method or the other. Unloading fglrx seems more reliable.
+        #echo '\_SB.PCI0.PEG0.PEGP._OFF' > /proc/acpi/call
+        modprobe -r fglrx
     ;;
     *)
         echo "Usage: $0 [option]...
