@@ -8,8 +8,7 @@ They were designed for an [Arch Linux](https://www.archlinux.org) system, howeve
 the scripts may be applicable to other distributions with some tweaking.
 
 They were also designed for a combination of fglrx (catalyst) and i915. I have
-not had any success with the radeon driver, due to KMS conflicts. Try at your
-own risk.
+not had any success with the radeon driver, due to KMS conflicts.
 
 ## Step-by-step installation
 
@@ -27,7 +26,8 @@ Vi0l0's GPU switching scripts that come with the `catalyst-utils-pxp` package
 are clever solutions for switching GPUs between X sessions, but they are
 unsuitable for use with Bumblebee.
 
-Keep `catalyst-utils-pxp` installed, but "switch" back to the Intel card.
+Keep `catalyst-utils-pxp` installed, but permanently "switch" back to the
+Intel card using:
 
 `pxp_switch_catalyst intel`
 
