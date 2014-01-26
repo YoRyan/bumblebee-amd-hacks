@@ -57,6 +57,9 @@ and waste heat. To power it on and off on demand, you have two options:
 * Install [acpi_call](https://aur.archlinux.org/packages/dkms-acpi_call-git/)
   from the AUR. Run the `turn_off_gpu.sh` script to determine which ACPI call
   turns off your GPU, and then put that call into `ati.sh`.
+  [It appears](http://sudofixit.blogspot.com.au/2014/01/fix-crash-when-using-acpicall-with-amd.html)
+  that you must power the GPU back on before suspending, or else
+  the system may crash after resuming and turning the GPU back on.
 
 ## Notes for users upgrading from the initial (summer 2013) version
 
